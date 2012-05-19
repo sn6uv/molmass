@@ -7,16 +7,31 @@ open_brackets = ["(", "[", "{"]
 close_brackets= ["}", "]", ")"] 
 
 def calc_mass(instr):
-    # Find elements
+    """Calculates the mass of a molecule from a molecular formula
+    >>> calc_mass("H2O")
+    {H: 2, O: 1}
+    18.0148
+
+    HexaaquaIron(II) 
+    >>> calc_mass("Fe(H2O)6")
+    {H: 12, O: 6, Fe: 1}
+    163.9358
+
+    Tris(ethylenediamine)nickel(II) chloride
+    >>> calc_mass("Ni(NH2-CH2-CH2-NH2)3Cl2")
+    {H: 24, C: 6, N: 6, Cl: 2, Ni: 1}
+    309.9136
+    """
+
 
     atom = {}
-
     i = 0
+
     while (i < len(instr)):
         if (ord(instr[i]) >= 65 and ord(instr[i]) <= 90):
             if (i+1 < len(instr) and ord(instr[i+1]) >= 97 
                 and ord(instr[i+1]) <= 122):
-                el = instr[i:i+1]
+                el = instr[i:i+2]
                 i+=1
             else:
                 el = instr[i]
@@ -54,7 +69,6 @@ def calc_mass(instr):
 
         # Esape out of the brackets one level at a time
         for b in range(brac_level, 0, -1):
-            print("*", multf)
             b_current = b
             for l in range(i, len(instr)):
                 if (instr[l] in open_brackets):
@@ -85,22 +99,26 @@ def calc_mass(instr):
     mass = 0.0
     for i in atom:
         mass += atom[i]*elements[i]
-    print(atom)
+
+    a=sorted([(k,value) for (k,value) in atom.items()],key=lambda x: elements[x[0]])
+    print("{" + ', '.join("{}: {}".format(ke,ve) for (ke,ve) in a) + "}")
     return mass
 
-def main():
-    
 
-    if (len(sys.argv) != 2):
+def main():
+    # Check input
+    if (len(sys.argv) < 2):
         print ("Invalid number of arguments")
         exit(1)
 
-    instr = sys.argv[1]
+    instr =  [s for s in sys.argv[1:] if s[0] != '-']
 
-    print("{} : {}g/mol".format(instr, calc_mass(instr)))
+    for s in instr:
+        print("{} : {}g/mol".format(s, calc_mass(s)))
 
     exit(0)
 
 if __name__=="__main__":
+    import doctest
+    doctest.testmod()
     main()
-
