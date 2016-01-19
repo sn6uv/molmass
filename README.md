@@ -30,10 +30,6 @@ brackets however all brackets are treated equally.
 
     >$ ./molmass.py "Fe{H2O)"
     {H: 12, O: 6, Fe: 1}
-    Fe{H2O)6 : 163.9358g/mol
+    Fe{H2O) : 163.9358g/mol
 
 MOLMASS ignores all non alphanumeric-bracket charachters 
-
-Bugs
-----
-Report any bugs to 16sn6uv@gmail.com
